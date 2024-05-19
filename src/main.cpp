@@ -1,98 +1,114 @@
+#include <algorithm>
+#include <cstdint>
 #include <iostream>
-#include <memory>
-#include <string>
+#include <vector>
 
-class MessageHandler
+class SoftwareEngineer;
+class SalesPerson;
+class CustomerSupporter;
+
+class EmployeeVisitor
 {
 public:
-    void HandleMessage(std::string const& message)
-    {
-        auto newState = state_->HandleMessage(message);
+    virtual ~EmployeeVisitor() = default;
 
-        if (newState)
-        {
-            state_ = std::move(newState);
-        }
-    }
-
-private:
-    class State
-    {
-    public:
-        virtual ~State() = default;
-
-        virtual std::unique_ptr<State> HandleMessage(std::string const& message) = 0;
-    };
-
-    class DefaultState : public State
-    {
-    public:
-        std::unique_ptr<State> HandleMessage(std::string const& message) override;
-    };
-
-    class SessionState : public State
-    {
-    public:
-        explicit SessionState(std::string sessionName)
-            : sessionName_(std::move(sessionName))
-        {}
-
-        std::unique_ptr<State> HandleMessage(std::string const& message) override;
-
-    private:
-        std::string sessionName_;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    std::unique_ptr<State> state_{ std::make_unique<DefaultState>() };
+    virtual void VisitSoftwareEngineer(SoftwareEngineer& softwareEngineer) = 0;
+    virtual void VisitSalesPerson(SalesPerson& salesPerson) = 0;
+    virtual void VisitCustomerSupporter(CustomerSupporter& customerSupporter) = 0;
 };
 
-std::unique_ptr<MessageHandler::State>
-MessageHandler::DefaultState::HandleMessage(std::string const& message)
+class Employee
 {
-    std::string const kStartSessionCommand("start_session ");
+public:
+    virtual ~Employee() = default;
 
-    if (message.compare(0, kStartSessionCommand.size(), kStartSessionCommand) == 0)
+    virtual void Accept(EmployeeVisitor& visitor) = 0;
+};
+
+class SoftwareEngineer : public Employee
+{
+public:
+    void Accept(EmployeeVisitor& visitor) override { visitor.VisitSoftwareEngineer(*this); }
+
+    /* hard coded value for simplicity of example */
+    std::uint64_t GetSoftwareQuality() const { return 40; }
+    std::uint64_t GetBusinessComprehension() const { return 20; }
+};
+
+class SalesPerson : public Employee
+{
+public:
+    void Accept(EmployeeVisitor& visitor) override { visitor.VisitSalesPerson(*this); }
+
+    /* hard coded value for simplicity of example */
+    std::uint64_t GetSalesVolume() const { return 8000; }
+};
+
+class CustomerSupporter : public Employee
+{
+public:
+    void Accept(EmployeeVisitor& visitor) override { visitor.VisitCustomerSupporter(*this); }
+
+    /* hard coded value for simplicity of example */
+    std::uint64_t GetCustomerSatisfaction() const { return 60; }
+};
+
+class IncentiveCalculationVisitor : public EmployeeVisitor
+{
+public:
+    void VisitSoftwareEngineer(SoftwareEngineer& softwareEngineer) override
     {
-        auto it = std::next(std::begin(message), kStartSessionCommand.size());
-        std::string sessionName(it, std::end(message));
-
-        std::cout << "[Start Session] Session Name : " << sessionName << std::endl;
-        return std::make_unique<SessionState>(std::move(sessionName));
+        totalIncentive_ += softwareEngineer.GetSoftwareQuality() * 2 +
+                           softwareEngineer.GetBusinessComprehension();
     }
-    else
+
+    void VisitSalesPerson(SalesPerson& salesPerson) override
     {
-        std::cout << "\"" << message << "\" is invalid message." << std::endl;
-        return nullptr;
+        totalIncentive_ += static_cast<std::uint64_t>(salesPerson.GetSalesVolume() * 0.01);
+    }
+
+    void VisitCustomerSupporter(CustomerSupporter& customerSupporter) override
+    {
+        totalIncentive_ += customerSupporter.GetCustomerSatisfaction();
+    }
+
+    std::uint64_t GetTotalIncentive() const { return totalIncentive_; }
+
+private:
+    std::uint64_t totalIncentive_{ 0u };
+};
+
+class PrintInformationVisitor : public EmployeeVisitor
+{
+public:
+    void VisitSoftwareEngineer(SoftwareEngineer& softwareEngineer) override
+    {
+        std::cout << "--- Information of Software Engineer ---" << std::endl;
+        std::cout << "Software Quality       : " << softwareEngineer.GetSoftwareQuality() << std::endl;
+        std::cout << "Business Comprehension : " << softwareEngineer.GetBusinessComprehension() << std::endl;
+    }
+
+    void VisitSalesPerson(SalesPerson& salesPerson) override
+    {
+        std::cout << "--- Information of Sales Person ---" << std::endl;
+        std::cout << "Sales Volume : " << salesPerson.GetSalesVolume() << std::endl;
+    }
+
+    void VisitCustomerSupporter(CustomerSupporter& customerSupporter) override
+    {
+        std::cout << "--- Information of Customer Supporter ---" << std::endl;
+        std::cout << "Customer Satisfaction : " << customerSupporter.GetCustomerSatisfaction() << std::endl;
+    }
+};
+
+void Calculate(const std::vector<Employee*>& employeeList,
+               const std::vector<EmployeeVisitor*>& visitorList)
+{
+    for (auto employee : employeeList)
+    {
+        for (auto visitor : visitorList)
+        {
+            employee->Accept(*visitor);
+        }
     }
 }
-
-std::unique_ptr<MessageHandler::State>
-MessageHandler::SessionState::HandleMessage(std::string const& message)
-{
-    std::string const kPrintCommand("print ");
-
-    if (message == "end_session")
-    {
-        std::cout << "[" << sessionName_ << "][End Session]" << std::endl;
-
-        return std::make_unique<DefaultState>();
-    }
-    else if (message.compare(0, kPrintCommand.size(), kPrintCommand) == 0)
-    {
-        auto it = std::next(std::begin(message), kPrintCommand.size());
-        std::string text(it, std::end(message));
-
-        std::cout << "[" << sessionName_ << "][Print] " << text << std::endl;
-        return nullptr;
-    }
-    else
-    {
-        std::cout << "[" << sessionName_ << "] \"" <<
-            message << "\" is invalid message." << std::endl;
-        return nullptr;
-    }
-}
-
-
