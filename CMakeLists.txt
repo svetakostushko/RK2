@@ -18,3 +18,4 @@ if(BUILD_TESTS)
   add_test(NAME check COMMAND check)
 endif()
 
+include(CPack.cmake)
