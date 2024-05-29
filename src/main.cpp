@@ -112,3 +112,30 @@ void Calculate(const std::vector<Employee*>& employeeList,
         }
     }
 }
+void Main()
+{
+    //
+    SoftwareEngineer se_1, se_2;
+    SalesPerson sp_1, sp_2, sp_3;
+    CustomerSupporter cs_1;
+
+    PrintInformationVisitor printInformationVisitor;
+    IncentiveCalculationVisitor incentiveCalculationVisitor;
+
+    //
+    std::vector<Employee*> employeeList;
+
+    employeeList.push_back(&se_1); employeeList.push_back(&se_2);
+    employeeList.push_back(&sp_1); employeeList.push_back(&sp_2); employeeList.push_back(&sp_3);
+    employeeList.push_back(&cs_1);
+
+    std::vector<EmployeeVisitor*> visitorList;
+    visitorList.push_back(&printInformationVisitor);
+    visitorList.push_back(&incentiveCalculationVisitor);
+
+    //
+    Calculate(employeeList, visitorList);
+
+    //
+    std::cout << "\n*** Total Incentive : " << incentiveCalculationVisitor.GetTotalIncentive() << std::endl;
+}
