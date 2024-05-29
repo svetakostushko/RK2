@@ -1,3 +1,4 @@
+#include <main.cpp>
 
 int main(){
     Main();
