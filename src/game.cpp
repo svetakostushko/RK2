@@ -132,8 +132,7 @@ void Calculate(const std::vector<Employee*>& employeeList,
     사용합니다. Visitor 객체의 타입과 Element 객체의 타입 모두에 따라 실제 수행될
     연산이 결정됩니다.
 */
-int main()
-{
+void RunMainLogic(){
     //
     SoftwareEngineer se_1, se_2;
     SalesPerson sp_1, sp_2, sp_3;
@@ -159,3 +158,4 @@ int main()
     //
     std::cout << "\n*** Total Incentive : " << incentiveCalculationVisitor.GetTotalIncentive() << std::endl;
 }
+
