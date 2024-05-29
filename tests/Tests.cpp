@@ -36,7 +36,7 @@ TEST(EmployeeVisitorTest3, MultipleVisitors) {
   EXPECT_EQ(incentiveCalculator.GetTotalIncentive(), 240u);
 }
 TEST(MainLogicTest, TotalIncentiveCalculation) {
-    RunMainLogic();  // This function should configure the visitors and employees.
+    Main();  // This function should configure the visitors and employees.
 
     // Assuming you have some way to retrieve the incentiveCalculator from RunMainLogic or its state is globally accessible.
     extern IncentiveCalculationVisitor incentiveCalculationVisitor;  // This needs to be declared somewhere accessible.
