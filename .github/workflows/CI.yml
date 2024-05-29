@@ -20,7 +20,20 @@ jobs:
       run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build  
+      run: | 
+           cd src
+           cmake -B build
+           cmake --build build
+           build/game
   
     - name: Run tests
-      run: build/check
+      run: |
+          cmake -B build
+          cmake --build build
+          build/check
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: ${{github.workspace}}/build
