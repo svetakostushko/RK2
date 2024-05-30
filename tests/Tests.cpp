@@ -4,8 +4,8 @@
 
 class MockSoftwareEngineer : public SoftwareEngineer {
 public:
-    MOCK_METHOD(std::uint64_t, GetSoftwareQuality, (), (const, override));
-    MOCK_METHOD(std::uint64_t, GetBusinessComprehension, (), (const, override));
+    MOCK_METHOD(std::uint64_t, GetSoftwareQuality, (), (const));
+    MOCK_METHOD(std::uint64_t, GetBusinessComprehension, (), (const));
 };
 
 TEST(EmployeeVisitorTest1, SoftwareEngineerVisitor) {
@@ -78,8 +78,8 @@ TEST(EmployeeVisitorTest, GetSoftwareQualityCallCount) {
     IncentiveCalculationVisitor incentiveCalculator;
 
     EXPECT_CALL(mockSoftwareEngineer, GetSoftwareQuality())
-        .Times(Exactly(1))
-        .WillOnce(Return(40));  // Mock the return value
+        .Times(testing::Exactly(1))
+        .WillOnce(testing::Return(40));  // Mock the return value
 
     mockSoftwareEngineer.Accept(incentiveCalculator);
 
