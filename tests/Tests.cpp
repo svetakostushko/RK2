@@ -1,5 +1,13 @@
+
 #include <gtest/gtest.h>
-#include <main.cpp>
+#include <gmock/gmock.h>
+#include "main.cpp"  // Ensure this points to the correct header/source file
+
+class MockSoftwareEngineer : public SoftwareEngineer {
+public:
+    MOCK_METHOD(std::uint64_t, GetSoftwareQuality, (), (const, override));
+    MOCK_METHOD(std::uint64_t, GetBusinessComprehension, (), (const, override));
+};
 
 TEST(EmployeeVisitorTest1, SoftwareEngineerVisitor) {
   SoftwareEngineer softwareEngineer;
@@ -66,22 +74,19 @@ TEST(MainFunctionTest, MainExecution) {
     EXPECT_EQ(buffer.str(), expectedOutput);
 }
 
-class MockSoftwareEngineer : public SoftwareEngineer {
-public:
-    MOCK_METHOD(std::uint64_t, GetSoftwareQuality, (), (const, override));
-};
-
-// Test to count the number of calls to GetSoftwareQuality
-TEST(SoftwareEngineerTest, CountGetSoftwareQualityCalls) {
+TEST(EmployeeVisitorTest, GetSoftwareQualityCallCount) {
     MockSoftwareEngineer mockSoftwareEngineer;
+    IncentiveCalculationVisitor incentiveCalculator;
 
-    // Set up the mock to call the real method and track the number of calls
     EXPECT_CALL(mockSoftwareEngineer, GetSoftwareQuality())
-        .Times(3)
-        .WillRepeatedly(testing::Invoke(&mockSoftwareEngineer, &SoftwareEngineer::GetSoftwareQuality));
+        .Times(Exactly(1))
+        .WillOnce(Return(40));  // Mock the return value
 
-    // Simulate the calls
-    mockSoftwareEngineer.GetSoftwareQuality();
-    mockSoftwareEngineer.GetSoftwareQuality();
-    mockSoftwareEngineer.GetSoftwareQuality();
+    EXPECT_CALL(mockSoftwareEngineer, GetBusinessComprehension())
+        .Times(Exactly(1))
+        .WillOnce(Return(20));  // Mock the return value
+
+    mockSoftwareEngineer.Accept(incentiveCalculator);
+
+    EXPECT_EQ(incentiveCalculator.GetTotalIncentive(), 100u);
 }
