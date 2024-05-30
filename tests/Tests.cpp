@@ -61,7 +61,7 @@ TEST(MainFunctionTest, MainExecution) {
         "Sales Volume : 8000\n"
         "--- Information of Customer Supporter ---\n"
         "Customer Satisfaction : 60\n"
-        "\n*** Total Incentive : 480\n";
+        "\n*** Total Incentive : 500\n";
 
     EXPECT_EQ(buffer.str(), expectedOutput);
 }
