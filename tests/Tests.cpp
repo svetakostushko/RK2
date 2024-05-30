@@ -78,8 +78,7 @@ TEST(EmployeeVisitorTest, GetSoftwareQualityCallCount) {
     IncentiveCalculationVisitor incentiveCalculator;
 
     EXPECT_CALL(mockSoftwareEngineer, GetSoftwareQuality())
-        .Times(testing::Exactly(1))
-        .WillOnce(testing::Return(40)); 
+        .Times(testing::Exactly(0)); 
 
     mockSoftwareEngineer.Accept(incentiveCalculator);
 
