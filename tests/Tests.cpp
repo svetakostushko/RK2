@@ -41,6 +41,7 @@ TEST(MainFunctionTest, TotalIncentiveCalculation) {
     SoftwareEngineer se_1, se_2;
     SalesPerson sp_1, sp_2, sp_3;
     CustomerSupporter cs_1;
+    std::vector<Employee*> employeeList;
 
     employeeList.push_back(&se_1); employeeList.push_back(&se_2);
     employeeList.push_back(&sp_1); employeeList.push_back(&sp_2); employeeList.push_back(&sp_3);
