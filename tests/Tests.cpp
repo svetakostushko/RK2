@@ -36,24 +36,32 @@ TEST(EmployeeVisitorTest3, MultipleVisitors) {
   EXPECT_EQ(incentiveCalculator.GetTotalIncentive(), 240u);
 }
 
-TEST(MainFunctionTest, TotalIncentiveCalculation) {
-    // Setup specific employees and visitors
-    SoftwareEngineer se_1, se_2;
-    SalesPerson sp_1, sp_2, sp_3;
-    CustomerSupporter cs_1;
-    std::vector<Employee*> employeeList;
+TEST(MainFunctionTest, MainExecution) {
+    // Redirect cout to a string stream to capture output
+    std::stringstream buffer;
+    std::streambuf* old = std::cout.rdbuf(buffer.rdbuf());
 
-    employeeList.push_back(&se_1); employeeList.push_back(&se_2);
-    employeeList.push_back(&sp_1); employeeList.push_back(&sp_2); employeeList.push_back(&sp_3);
-    employeeList.push_back(&cs_1);
-    std::vector<EmployeeVisitor*> visitorList;
+    // Call the Main function
+    Main();
 
-    visitorList.push_back(&printInformationVisitor);
-    visitorList.push_back(&incentiveCalculationVisitor);
+    std::cout.rdbuf(old);  // Reset cout to its old buffer
 
-    // Call Main function or equivalent logic
-    Main(employeeList, visitorList);
+    std::string expectedOutput =
+        "--- Information of Software Engineer ---\n"
+        "Software Quality       : 40\n"
+        "Business Comprehension : 20\n"
+        "--- Information of Software Engineer ---\n"
+        "Software Quality       : 40\n"
+        "Business Comprehension : 20\n"
+        "--- Information of Sales Person ---\n"
+        "Sales Volume : 8000\n"
+        "--- Information of Sales Person ---\n"
+        "Sales Volume : 8000\n"
+        "--- Information of Sales Person ---\n"
+        "Sales Volume : 8000\n"
+        "--- Information of Customer Supporter ---\n"
+        "Customer Satisfaction : 60\n"
+        "\n*** Total Incentive : 480\n";
 
-    // Assert expected total incentive
-    EXPECT_EQ(incentiveCalculationVisitor.GetTotalIncentive(), expectedIncentive);
+    EXPECT_EQ(buffer.str(), expectedOutput);
 }
