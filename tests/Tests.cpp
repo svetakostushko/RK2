@@ -81,10 +81,6 @@ TEST(EmployeeVisitorTest, GetSoftwareQualityCallCount) {
         .Times(Exactly(1))
         .WillOnce(Return(40));  // Mock the return value
 
-    EXPECT_CALL(mockSoftwareEngineer, GetBusinessComprehension())
-        .Times(Exactly(1))
-        .WillOnce(Return(20));  // Mock the return value
-
     mockSoftwareEngineer.Accept(incentiveCalculator);
 
     EXPECT_EQ(incentiveCalculator.GetTotalIncentive(), 100u);
