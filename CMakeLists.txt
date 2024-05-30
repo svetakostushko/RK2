@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_TESTS "Build tests" OFF)
 
 add_library(src STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+target_include_directories(src PRIVATE "${GMOCK_INCLUDE_DIRS}" "${GTEST_INCLUDE_DIRS}")
 target_include_directories(src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
