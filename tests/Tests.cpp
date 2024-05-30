@@ -65,3 +65,9 @@ TEST(MainFunctionTest, MainExecution) {
 
     EXPECT_EQ(buffer.str(), expectedOutput);
 }
+
+TEST(SoftwareEngineerTest, GetSoftwareQuality) {
+    SoftwareEngineer softwareEngineer;
+
+    EXPECT_EQ(softwareEngineer.GetSoftwareQuality(), 40u);  // Expected software quality value
+}
