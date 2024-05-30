@@ -46,6 +46,7 @@ TEST(MainFunctionTest, TotalIncentiveCalculation) {
     employeeList.push_back(&se_1); employeeList.push_back(&se_2);
     employeeList.push_back(&sp_1); employeeList.push_back(&sp_2); employeeList.push_back(&sp_3);
     employeeList.push_back(&cs_1);
+    std::vector<EmployeeVisitor*> visitorList;
 
     visitorList.push_back(&printInformationVisitor);
     visitorList.push_back(&incentiveCalculationVisitor);
