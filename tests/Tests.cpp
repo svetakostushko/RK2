@@ -36,7 +36,7 @@ TEST(EmployeeVisitorTest3, MultipleVisitors) {
   EXPECT_EQ(incentiveCalculator.GetTotalIncentive(), 240u);
 }
 
-TEST_F(MainFunctionTest, TotalIncentiveCalculation) {
+TEST(MainFunctionTest, TotalIncentiveCalculation) {
     // Setup specific employees and visitors
     SoftwareEngineer se_1, se_2;
     SalesPerson sp_1, sp_2, sp_3;
