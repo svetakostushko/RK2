@@ -15,9 +15,9 @@ jobs:
 
     - name: Adding gtest
       run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
-
-    - name: Install lcov
-      run: sudo apt-get install -y lcov
+      
+    -name: Adding gmock
+      run: git clone https://github.com/google/googletest.git third-party/gmock -b release-1.11.0
 
     - name: Config
       run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
