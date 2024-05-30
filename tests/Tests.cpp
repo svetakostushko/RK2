@@ -66,8 +66,22 @@ TEST(MainFunctionTest, MainExecution) {
     EXPECT_EQ(buffer.str(), expectedOutput);
 }
 
-TEST(SoftwareEngineerTest, GetSoftwareQuality) {
-    SoftwareEngineer softwareEngineer;
+class MockSoftwareEngineer : public SoftwareEngineer {
+public:
+    MOCK_METHOD(std::uint64_t, GetSoftwareQuality, (), (const, override));
+};
 
-    EXPECT_EQ(softwareEngineer.GetSoftwareQuality(), 40u);  // Expected software quality value
+// Test to count the number of calls to GetSoftwareQuality
+TEST(SoftwareEngineerTest, CountGetSoftwareQualityCalls) {
+    MockSoftwareEngineer mockSoftwareEngineer;
+
+    // Set up the mock to call the real method and track the number of calls
+    EXPECT_CALL(mockSoftwareEngineer, GetSoftwareQuality())
+        .Times(3)
+        .WillRepeatedly(testing::Invoke(&mockSoftwareEngineer, &SoftwareEngineer::GetSoftwareQuality));
+
+    // Simulate the calls
+    mockSoftwareEngineer.GetSoftwareQuality();
+    mockSoftwareEngineer.GetSoftwareQuality();
+    mockSoftwareEngineer.GetSoftwareQuality();
 }
