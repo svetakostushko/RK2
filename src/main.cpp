@@ -31,7 +31,10 @@ public:
     void Accept(EmployeeVisitor& visitor) override { visitor.VisitSoftwareEngineer(*this); }
 
     /* hard coded value for simplicity of example */
-    std::uint64_t GetSoftwareQuality() const { return 40; }
+    std::uint64_t GetSoftwareQuality() const { 
+        std::cout << "GetSoftwareQuality" << std::endl;
+        return 40; 
+    }
     std::uint64_t GetBusinessComprehension() const { return 20; }
 };
 
